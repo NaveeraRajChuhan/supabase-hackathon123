@@ -639,3 +639,89 @@ body {
 .shape-1 { width: 300px; height: 300px; background: #4facfe; top: -50px; left: -50px; }
 .shape-2 { width: 400px; height: 400px; background: #00f2fe; bottom: -100px; right: -50px; }
 
+/* card css */
+
+.task-item {
+  background: rgba(255, 255, 255);
+  border-radius: 16px;
+  margin-bottom: 20px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+}
+
+.task-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 30px rgba(0, 255, 255, 0.15);
+}
+
+/* IMAGE */
+.task-img-wrapper {
+  position: relative;
+  cursor: pointer;
+}
+
+.task-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+/* IMAGE HOVER OVERLAY */
+.img-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  color: #0ff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: 0.3s ease;
+  font-size: 14px;
+}
+
+.task-img-wrapper:hover .img-overlay {
+  opacity: 1;
+}
+
+/* CONTENT */
+.task-content {
+  padding: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.task-text {
+  font-size: 16px;
+  font-weight: 500;
+  /* color: #fff; */
+  cursor: pointer;
+}
+
+.text-done {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+/* ACTION BUTTONS */
+.task-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-icon {
+  color: #0ff;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-icon:hover {
+  transform: scale(1.2);
+}
+
+.delete-btn {
+  color: #ff4d4d;
+}

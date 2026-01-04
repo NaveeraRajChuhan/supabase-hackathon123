@@ -1,114 +1,127 @@
-
-
-
-
-let todos = JSON.parse(localStorage.getItem('naveera_tasks')) || [];
-const taskInput = document.getElementById('taskInput');
-const taskList = document.getElementById('taskList');
-const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+let todos = JSON.parse(localStorage.getItem("naveera_tasks")) || [];
+const taskInput = document.getElementById("taskInput");
+const taskList = document.getElementById("taskList");
+const editModal = new bootstrap.Modal(document.getElementById("editModal"));
 
 // --- CREATE ---
 function addTask() {
-    const text = taskInput.value.trim();
-    if (text === "") return;
+  const text = taskInput.value.trim();
+  if (text === "") return;
 
-    // 🔹 image field ADDED
-    todos.push({ text: text, completed: false, image: "" });
-    taskInput.value = "";
-    saveAndRender();
+  // 🔹 image field ADDED
+  todos.push({ text: text, completed: false, image: "" });
+  taskInput.value = "";
+  saveAndRender();
 }
 
 // --- READ ---
 function renderTasks() {
-    taskList.innerHTML = "";
-    todos.forEach((todo, index) => {
-        const div = document.createElement('div');
-        div.className = `task-item ${todo.completed ? 'completed' : ''}`;
+  taskList.innerHTML = "";
+  todos.forEach((todo, index) => {
+    const div = document.createElement("div");
+    div.className = `task-item ${todo.completed ? "completed" : ""}`;
 
-        div.innerHTML = `
-            <!-- IMAGE (CLICK TO UPLOAD) -->
-            <img 
-              src="${todo.image || 'https://via.placeholder.com/200'}"
-              class="task-img"
-              onclick="triggerImageUpload(${index})"
-            />
+    div.innerHTML = `
+  <div class="task-card-inner">
+    
+    <!-- IMAGE -->
+    <div class="task-img-wrapper" onclick="triggerImageUpload(${index})">
+      <img 
+        src="${
+          todo.image || "https://via.placeholder.com/300x180?text=Upload+Image"
+        }"
+        class="task-img"
+      />
+      <div class="img-overlay">
+        <i class="fa-solid fa-camera"></i>
+        <span>Change Image</span>
+      </div>
+    </div>
 
-            <input 
-              type="file"
-              accept="image/*"
-              id="fileInput-${index}"
-              style="display:none"
-              onchange="handleImageUpload(event, ${index})"
-            />
+    <!-- CONTENT -->
+    <div class="task-content">
+      <span class="task-text ${todo.completed ? "text-done" : ""}"
+            onclick="toggleComplete(${index})">
+        ${todo.text}
+      </span>
 
-            <span class="task-text" onclick="toggleComplete(${index})">
-              ${todo.text}
-            </span>
+      <div class="task-actions">
+        <i class="fas fa-edit btn-icon" onclick="openEdit(${index})"></i>
+        <i class="fas fa-trash btn-icon delete-btn" onclick="deleteTask(${index})"></i>
+      </div>
+    </div>
 
-            <div>
-                <i class="fas fa-edit btn-icon" onclick="openEdit(${index})"></i>
-                <i class="fas fa-trash btn-icon delete-btn" onclick="deleteTask(${index})"></i>
-            </div>
-        `;
-        taskList.appendChild(div);
-    });
+    <!-- HIDDEN FILE INPUT -->
+    <input 
+      type="file"
+      accept="image/*"
+      id="fileInput-${index}"
+      hidden
+      onchange="handleImageUpload(event, ${index})"
+    />
+
+  </div>
+`;
+
+    taskList.appendChild(div);
+  });
 }
 
 // --- UPDATE (Status) ---
 function toggleComplete(index) {
-    todos[index].completed = !todos[index].completed;
-    saveAndRender();
+  todos[index].completed = !todos[index].completed;
+  saveAndRender();
 }
 
 // --- UPDATE (Edit Content) ---
 function openEdit(index) {
-    document.getElementById('editTaskInput').value = todos[index].text;
-    document.getElementById('editTaskIndex').value = index;
-    editModal.show();
+  document.getElementById("editTaskInput").value = todos[index].text;
+  document.getElementById("editTaskIndex").value = index;
+  editModal.show();
 }
 
 function saveEdit() {
-    const index = document.getElementById('editTaskIndex').value;
-    const newText = document.getElementById('editTaskInput').value;
-    if (newText.trim() !== "") {
-        todos[index].text = newText;
-        editModal.hide();
-        saveAndRender();
-    }
+  const index = document.getElementById("editTaskIndex").value;
+  const newText = document.getElementById("editTaskInput").value;
+  if (newText.trim() !== "") {
+    todos[index].text = newText;
+    editModal.hide();
+    saveAndRender();
+  }
 }
 
 // --- DELETE ---
 function deleteTask(index) {
-    const item = document.querySelectorAll('.task-item')[index];
-    item.style.transform = "translateX(50px)";
-    item.style.opacity = "0";
-    setTimeout(() => {
-        todos.splice(index, 1);
-        saveAndRender();
-    }, 300);
+  const item = document.querySelectorAll(".task-item")[index];
+  item.style.transform = "translateX(50px)";
+  item.style.opacity = "0";
+  setTimeout(() => {
+    todos.splice(index, 1);
+    saveAndRender();
+  }, 300);
 }
 
 // 🔹 IMAGE UPLOAD FUNCTIONS (NEW)
 function triggerImageUpload(index) {
-    document.getElementById(`fileInput-${index}`).click();
+  document.getElementById(`fileInput-${index}`).click();
 }
 
 function handleImageUpload(event, index) {
-    const file = event.target.files[0];
-    if (!file) return;
+  const file = event.target.files[0];
+  if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        todos[index].image = e.target.result;
-        saveAndRender();
-    };
-    reader.readAsDataURL(file);
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    todos[index].image = e.target.result;
+    saveAndRender();
+  };
+  reader.readAsDataURL(file);
 }
 
 // Helper to persist data
 function saveAndRender() {
-    localStorage.setItem('naveera_tasks', JSON.stringify(todos));
-    renderTasks();
+  localStorage.setItem("naveera_tasks", JSON.stringify(todos));
+  renderTasks();
 }
 
 // Initial Render
@@ -116,5 +129,5 @@ renderTasks();
 
 // Enter key support
 taskInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") addTask();
+  if (e.key === "Enter") addTask();
 });
